@@ -18,7 +18,7 @@ public class NewsController {
     private final NewsService newsService;
 
     @Operation(summary = "헤드라인 뉴스 목록 조회", description = "Naver 경제 헤드라인 뉴스를 모두(10개) 조회합니다.")
-    @GetMapping()
+    @GetMapping("/head-line")
     public ApiResponse<?> getHeadLineNews() {
         return ApiResponse.onSuccess(newsService.getHeadLineNews());
     }
