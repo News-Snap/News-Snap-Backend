@@ -1,5 +1,7 @@
 package com.example.news_snap.domain.myWord.service;
 
+import com.example.news_snap.domain.myWord.dto.MyWordRequest;
+import com.example.news_snap.domain.myWord.dto.MyWordResponse;
 import com.example.news_snap.domain.myWord.entity.MyWord;
 import com.example.news_snap.domain.myWord.repository.MyWordRepository;
 import com.example.news_snap.domain.user.entity.User;
@@ -9,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -19,23 +22,26 @@ public class MyWordService {
     private final UserRepository userRepository;
 
 
-    public List<MyWord> findMyWordList(Long userId) {
+    public List<MyWordResponse.MyWordDTO> getMyWordList(Long userId) {
         User user = userRepository.findById(userId).orElse(null);
         List<MyWord> myWordList = user.getMyWordList();
-        return myWordList;
+        return myWordList.stream()
+                .map(a -> new MyWordResponse.MyWordDTO(a.getWord())).collect(Collectors.toList());
 
 
     }
 
-
-
-
-    public void addMyWord(Long userId, MyWord myWord) {
+    public MyWordResponse.addResultDTO addMyWord(Long userId, MyWordRequest request) {
+        MyWord myWord = MyWord.builder()
+                .word(request.word())
+                .build();
 
         User user = userRepository.findById(userId).orElseThrow();  //예외처리
         myWord.setUser(user);
         myWordRepository.save(myWord);
+
+        return MyWordResponse.addResultDTO.builder()
+                .word(myWord.getWord())
+                .build();
     }
-
-
 }
