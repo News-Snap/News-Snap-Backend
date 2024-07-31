@@ -15,7 +15,6 @@ public record SignupUserDTO(
          LocalDate birthDate,
          AlarmDay alarmDay,
          Boolean pushAlarm
-         //,String id
 ) {
 
 }
