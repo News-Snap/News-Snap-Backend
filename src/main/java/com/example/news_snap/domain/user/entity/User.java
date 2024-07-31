@@ -1,5 +1,5 @@
 package com.example.news_snap.domain.user.entity;
-
+/*
 import com.example.news_snap.domain.scrap.entity.Scrap;
 import com.example.news_snap.domain.scrap.entity.enums.Status;
 import com.example.news_snap.global.common.BaseEntity;
@@ -35,3 +35,4 @@ public class User extends BaseEntity {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Scrap> scrapList = new ArrayList<>();
 }
+*/
