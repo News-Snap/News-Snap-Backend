@@ -1,6 +1,7 @@
 package com.example.news_snap.domain.news.controller;
 
 import com.example.news_snap.domain.news.dto.NewsResponseDto;
+import com.example.news_snap.domain.news.dto.NewsSearchOptions;
 import com.example.news_snap.domain.news.service.NewsService;
 import com.example.news_snap.global.common.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -24,5 +25,13 @@ public class NewsController {
     @GetMapping("/head-line")
     public ApiResponse<List<NewsResponseDto>> getHeadLineNews() {
         return ApiResponse.onSuccess(newsService.getHeadLineNews());
+    }
+
+    @Operation(summary = "뉴스 키워드 조회", description = "네이버 뉴스를 키워드로 검색합니다.")
+    @GetMapping()
+    public ApiResponse<?> searchNews(
+            NewsSearchOptions searchOptions
+    ) {
+        return ApiResponse.onSuccess(newsService.searchNews(searchOptions));
     }
 }
