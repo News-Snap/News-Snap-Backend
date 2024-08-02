@@ -12,6 +12,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -24,6 +26,7 @@ public class UserController {
     private UserService userService;
     @Autowired
     TokenProvider tokenProvider;
+    private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
 
     @Operation(summary = "회원가입", description = "게스트 계정 회원가입")
@@ -42,7 +45,7 @@ public class UserController {
             }
             User user = User.builder()
                     .email(userDTO.email())
-                    .password(userDTO.password())
+                    .password(passwordEncoder.encode(userDTO.password()))
                     .nickname(userDTO.nickname())
                     .alarmTime(userDTO.alarmTime())
                     .birthDate(userDTO.birthDate())
@@ -71,7 +74,8 @@ public class UserController {
     public ApiResponse<String> authenticateUser(@RequestBody LoginRequestDTO loginRequestDTO) {
         User user = userService.getByCredentials(
                 loginRequestDTO.email(),
-                loginRequestDTO.password()
+                loginRequestDTO.password(),
+                passwordEncoder
         );
         if (user != null) {
             final String token = tokenProvider.createToken(user);
