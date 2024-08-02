@@ -1,7 +1,6 @@
 package com.example.news_snap.domain.login.controller;
 
 import com.example.news_snap.domain.login.dto.LoginRequestDTO;
-import com.example.news_snap.domain.login.dto.SignupResponseDTO;
 import com.example.news_snap.domain.login.dto.SignupUserDTO;
 import com.example.news_snap.domain.login.entity.User;
 //import com.example.news_snap.domain.login.security.TokenProvider;
@@ -12,10 +11,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
 
 @Slf4j
@@ -28,6 +25,7 @@ public class UserController {
     @Autowired
     TokenProvider tokenProvider;
 
+
     @Operation(summary = "회원가입", description = "게스트 계정 회원가입")
         /*
     @ApiResponses({
@@ -35,7 +33,7 @@ public class UserController {
             @ApiResponse(responseCode = "400", description = "회원가입 실패")
     })*/
     @PostMapping("/signup")
-    public ApiResponse<SignupResponseDTO> registerUser(@RequestBody SignupUserDTO userDTO) {
+    public ApiResponse<?> registerUser(@RequestBody SignupUserDTO userDTO) {
         try {
 
 
