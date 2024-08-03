@@ -39,3 +39,4 @@ public class User extends BaseEntity {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<MyWord> myWordList = new ArrayList<>();
 }
+*/
