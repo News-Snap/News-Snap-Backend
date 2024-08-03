@@ -1,7 +1,6 @@
 package com.example.news_snap.domain.myWord.entity;
 
-
-import com.example.news_snap.domain.user.entity.User;
+import com.example.news_snap.domain.login.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
 

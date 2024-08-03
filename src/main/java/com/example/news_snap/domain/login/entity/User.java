@@ -1,12 +1,10 @@
 package com.example.news_snap.domain.login.entity;
 
+import com.example.news_snap.domain.myWord.entity.MyWord;
 import com.example.news_snap.domain.scrap.entity.Scrap;
 import com.example.news_snap.global.common.BaseEntity;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -18,7 +16,6 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @Data
-@Table(uniqueConstraints = {@UniqueConstraint(columnNames = "email")},name = "user")
 public class User extends BaseEntity {
     @Id
     @GeneratedValue( strategy = GenerationType.IDENTITY )
@@ -51,4 +48,7 @@ public class User extends BaseEntity {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Scrap> scrapList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<MyWord> myWordList = new ArrayList<>();
 }

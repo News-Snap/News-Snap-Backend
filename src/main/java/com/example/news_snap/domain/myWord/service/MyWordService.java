@@ -1,11 +1,11 @@
 package com.example.news_snap.domain.myWord.service;
 
+import com.example.news_snap.domain.login.entity.User;
+import com.example.news_snap.domain.login.repository.UserRepository;
 import com.example.news_snap.domain.myWord.dto.MyWordRequest;
 import com.example.news_snap.domain.myWord.dto.MyWordResponse;
 import com.example.news_snap.domain.myWord.entity.MyWord;
 import com.example.news_snap.domain.myWord.repository.MyWordRepository;
-import com.example.news_snap.domain.user.entity.User;
-import com.example.news_snap.domain.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -27,8 +27,6 @@ public class MyWordService {
         List<MyWord> myWordList = user.getMyWordList();
         return myWordList.stream()
                 .map(a -> new MyWordResponse.MyWordDTO(a.getWord())).collect(Collectors.toList());
-
-
     }
 
     public MyWordResponse.addResultDTO addMyWord(Long userId, MyWordRequest request) {
