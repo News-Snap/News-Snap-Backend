@@ -70,7 +70,7 @@ public class UserController {
             @ApiResponse(responseCode = "200", description = "로그인 성공"),
             @ApiResponse(responseCode = "400", description = "로그인 실패")
     })*/
-    @PostMapping("login")
+    @PostMapping("/login")
     public ApiResponse<String> authenticateUser(@RequestBody LoginRequestDTO loginRequestDTO) {
         User user = userService.getByCredentials(
                 loginRequestDTO.email(),
