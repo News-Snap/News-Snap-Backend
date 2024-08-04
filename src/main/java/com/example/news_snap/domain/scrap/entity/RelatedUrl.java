@@ -11,15 +11,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ScrapKeyword {
+public class RelatedUrl {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long scrapKeywordId;
+    private Long relatedUrlId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "keyword_id")
-    private Keyword keyword;
+    private String relatedUrl;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "scrap_id")
