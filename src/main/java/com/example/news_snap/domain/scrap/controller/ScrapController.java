@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -40,6 +39,14 @@ public class ScrapController {
             @PathVariable(name = "scrap_id") Long scrapId
     ) {
         return ApiResponse.onSuccess(scrapService.findScrap(scrapId));
+    }
+
+    @Operation(summary = "스크랩 TOP4 키워드 조회", description = "상위 4개 키워드를 조회합니다.")
+    @GetMapping("/keywords")
+    public ApiResponse<List<ScrapResponse.KeywordDto>> getTopKeywords(
+            @AuthenticationPrincipal User user
+    ) {
+        return ApiResponse.onSuccess(scrapService.getTopKeywords(user));
     }
 
     @Operation(summary = "스크랩 작성: 내용 작성", description = "스크랩의 내용을 작성합니다.")

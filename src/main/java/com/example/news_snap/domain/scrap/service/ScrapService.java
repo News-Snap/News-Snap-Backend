@@ -103,4 +103,8 @@ public class ScrapService {
 
         return "삭제 되었습니다.";
     }
+
+    public List<ScrapResponse.KeywordDto> getTopKeywords(User user) {
+        return scrapRepository.findTopKeywordByUser(user);
+    }
 }

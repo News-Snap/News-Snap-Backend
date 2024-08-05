@@ -10,4 +10,6 @@ import java.util.List;
 @Repository
 public interface ScrapRepositoryCustom {
     List<ScrapResponse.PreviewDto> findScrapByConditions(User user, String keyword, LocalDate date);
+
+    List<ScrapResponse.KeywordDto> findTopKeywordByUser(User user);
 }

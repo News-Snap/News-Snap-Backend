@@ -4,19 +4,23 @@ import com.example.news_snap.domain.scrap.entity.enums.FinancialTerms;
 import lombok.Builder;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
+@Builder
 public record ScrapResponse() {
 
     @Builder
     public record PreviewDto(
             Long scrapId,
             String title,
-            List<FinancialTerms> keywords,
-            LocalDateTime modifiedAt
+            List<String> keywords,
+            LocalDateTime updatedAt
     ) {
+        public PreviewDto {
+            keywords = keywords != null ? keywords : new ArrayList<>();
+        }
     }
-
     @Builder
     public record DetailDto(
             String title,
@@ -34,4 +38,9 @@ public record ScrapResponse() {
             Long scrapId
     ) {
     }
+
+    @Builder
+    public record KeywordDto (
+            String keyword
+    ) {}
 }
