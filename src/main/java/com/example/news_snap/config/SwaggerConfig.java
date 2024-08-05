@@ -20,11 +20,9 @@ public class SwaggerConfig {
 //            Server server = new Server().url("/");
         return new OpenAPI()
                 .info(getSwaggerInfo())
-                .components(getComponents())
                 // 보안 인증 추가 시 사용
-                //.components(authSetting())
-                .addServersItem(server);
-                //.addSecurityItem(new SecurityRequirement().addList("access-token"));
+                .components(authSetting())
+                .addSecurityItem(new SecurityRequirement().addList("access-token"));
     }
 
     private Info getSwaggerInfo() {
@@ -42,13 +40,13 @@ public class SwaggerConfig {
         return new Components();
     }
     // 보안 인증 추가 시 사용
-//    private Components authSetting() {
-//        return new Components()
-//                .addSecuritySchemes(
-//                        "access-token",
-//                        new SecurityScheme()
-//                                .type(SecurityScheme.Type.HTTP)
-//                                .scheme("bearer")
-//                                .bearerFormat("JWT"));
-//    }
+    private Components authSetting() {
+        return new Components()
+                .addSecuritySchemes(
+                        "access-token",
+                        new SecurityScheme()
+                                .type(SecurityScheme.Type.HTTP)
+                                .scheme("bearer")
+                                .bearerFormat("JWT"));
+    }
 }
