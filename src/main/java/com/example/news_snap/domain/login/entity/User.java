@@ -51,4 +51,24 @@ public class User extends BaseEntity {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<MyWord> myWordList = new ArrayList<>();
+
+    // 커스터마이징된 toString() 메서드
+    @Override
+    public String toString() {
+        return "User{" +
+                "userId=" + userId +
+                ", nickname='" + nickname + '\'' +
+                ", password='" + password + '\'' +
+                ", role='" + role + '\'' +
+                ", authProvider='" + authProvider + '\'' +
+                ", email='" + email + '\'' +
+                ", alarmTime=" + alarmTime +
+                ", birthDate=" + birthDate +
+                ", pushAlarm=" + pushAlarm +
+                ", inactivatedAt=" + inactivatedAt +
+                ", status=" + status +
+                ", alarmDay=" + alarmDay +
+                '}';
+    }
 }
+

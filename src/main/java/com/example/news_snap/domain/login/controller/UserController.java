@@ -17,6 +17,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 
+
+
 @Slf4j
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -26,6 +28,7 @@ public class UserController {
     private UserService userService;
     @Autowired
     TokenProvider tokenProvider;
+
     private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
 
@@ -38,25 +41,8 @@ public class UserController {
     @PostMapping("/signup")
     public ApiResponse<?> registerUser(@RequestBody SignupUserDTO userDTO) {
         try {
-
-
-            if (userDTO == null || userDTO.password() == null) {
-                throw new RuntimeException("비밀번호가 입력되지 않았습니다.");
-            }
-            User user = User.builder()
-                    .email(userDTO.email())
-                    .password(passwordEncoder.encode(userDTO.password()))
-                    .nickname(userDTO.nickname())
-                    .alarmTime(userDTO.alarmTime())
-                    .birthDate(userDTO.birthDate())
-                    .alarmDay(userDTO.alarmDay())
-                    .pushAlarm(userDTO.pushAlarm())
-                    .build();
-            User registerUser = userService.createUser(user);
-
-
-
-            return ApiResponse.onSuccess(null);
+                User registerUser = userService.createUser(userDTO);
+                return ApiResponse.onSuccess(null);
         } catch (Exception e) {
             //나중에 responseBody 추가
             return ApiResponse.onFailure(null);
@@ -79,7 +65,6 @@ public class UserController {
         );
         if (user != null) {
             final String token = tokenProvider.createToken(user);
-
             return ApiResponse.onSuccess(token);
         } else {
             return ApiResponse.onFailure(null);
