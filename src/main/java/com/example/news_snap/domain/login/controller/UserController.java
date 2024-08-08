@@ -11,7 +11,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -31,21 +30,15 @@ public class UserController {
 
     private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-
     @Operation(summary = "회원가입", description = "게스트 계정 회원가입")
-        /*
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "회원가입 성공"),
-            @ApiResponse(responseCode = "400", description = "회원가입 실패")
-    })*/
     @PostMapping("/signup")
     public ApiResponse<?> registerUser(@RequestBody SignupUserDTO userDTO) {
-        try {
-                User registerUser = userService.createUser(userDTO);
-                return ApiResponse.onSuccess(null);
+            try {
+            userService.createUser(userDTO);
+            return ApiResponse.onSuccess("회원가입 성공");
         } catch (Exception e) {
             //나중에 responseBody 추가
-            return ApiResponse.onFailure(null);
+            return ApiResponse.onFailure("회원가입 실패");
 
         }
     }
@@ -65,9 +58,10 @@ public class UserController {
         );
         if (user != null) {
             final String token = tokenProvider.createToken(user);
+
             return ApiResponse.onSuccess(token);
         } else {
-            return ApiResponse.onFailure(null);
+            return ApiResponse.onFailure("로그인 실패");
         }
     }
 }
