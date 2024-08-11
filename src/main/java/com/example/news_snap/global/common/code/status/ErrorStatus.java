@@ -20,7 +20,11 @@ public enum ErrorStatus implements BaseErrorCode {
     _NOT_FOUND_SCRAP(HttpStatus.NOT_FOUND, "SCRAP400", "스크랩이 존재하지 않습니다."),
 
     // User 에러
-    _NOT_FOUND_USER(HttpStatus.NOT_FOUND, "USER400", "사용자가 존재하지 않습니다.");
+    _NOT_FOUND_USER(HttpStatus.NOT_FOUND, "USER400", "사용자가 존재하지 않습니다."),
+
+    // News API 에러
+    _NOT_FOUND_NEWS(HttpStatus.NOT_FOUND, "NEWS400", "검색된 뉴스가 존재하지 않습니다."),
+    _UNAVAILABLE_NEWS_API(HttpStatus.SERVICE_UNAVAILABLE, "NEWS503", "Naver API 미작동, 관리자에게 문의 바랍니다.");
 
     private final HttpStatus httpStatus;
     private final String code;
