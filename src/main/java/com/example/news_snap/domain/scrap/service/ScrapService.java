@@ -13,6 +13,9 @@ import com.example.news_snap.domain.scrap.repository.RelatedUrlRepository;
 import com.example.news_snap.domain.scrap.repository.ScrapRepository;
 import com.example.news_snap.global.common.code.status.ErrorStatus;
 import com.example.news_snap.global.common.exception.handler.ScrapHandler;
+import com.example.news_snap.s3.S3Manager;
+import com.example.news_snap.s3.uuid.Uuid;
+import com.example.news_snap.s3.uuid.UuidRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @Transactional
@@ -29,6 +33,8 @@ public class ScrapService {
     private final ScrapRepository scrapRepository;
     private final KeywordRepository keywordRepository;
     private final RelatedUrlRepository relatedUrlRepository;
+    private final UuidRepository uuidRepository;
+    private final S3Manager s3Manager;
 
     public List<ScrapResponse.PreviewDto> findScrapList(User user, String keyword, LocalDate date) {
         return scrapRepository.findScrapByConditions(user, keyword, date);
@@ -80,9 +86,21 @@ public class ScrapService {
     }
 
     public String uploadScrapFile(Long scrapId, MultipartFile file) {
-        // TODO S3 환경 설정 추가
+        String url = null;
+        Scrap scrap = scrapRepository.findById(scrapId)
+                .orElseThrow(() -> new ScrapHandler(ErrorStatus._NOT_FOUND_SCRAP));
 
-        return "파일이 업로드 되었습니다.";
+        if (file != null && !file.isEmpty()) {
+            String uuid = UUID.randomUUID().toString();
+            Uuid savedUuid = uuidRepository.save(Uuid.builder()
+                    .uuid(uuid).build());
+
+            url = s3Manager.uploadFile(s3Manager.generateImage(savedUuid), file);
+            scrap.uploadFile(url);
+            scrapRepository.save(scrap);
+            return "파일 첨부 완료";
+        }
+        return "첨부된 파일이 없습니다.";
     }
 
     public String updateScrap(ScrapRequest.ContentDto request, Long scrapId) {

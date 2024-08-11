@@ -46,4 +46,8 @@ public class Scrap extends BaseEntity {
         this.content = request.content();
         this.title = request.title();
     }
+
+    public void uploadFile(String url) {
+        this.fileUrl = url;
+    }
 }
