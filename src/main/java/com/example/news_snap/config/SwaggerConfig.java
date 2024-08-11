@@ -17,10 +17,8 @@ public class SwaggerConfig {
     @Bean
     public OpenAPI getOpenApi() {
         Server server = new Server().url("/");
-//            Server server = new Server().url("/");
         return new OpenAPI()
                 .info(getSwaggerInfo())
-                // 보안 인증 추가 시 사용
                 .components(authSetting())
                 .addSecurityItem(new SecurityRequirement().addList("access-token"));
     }
@@ -36,10 +34,6 @@ public class SwaggerConfig {
                 .license(license);
     }
 
-    private Components getComponents() {
-        return new Components();
-    }
-    // 보안 인증 추가 시 사용
     private Components authSetting() {
         return new Components()
                 .addSecuritySchemes(
