@@ -45,7 +45,7 @@ public class ScrapRepositoryCustomImpl implements ScrapRepositoryCustom {
         }
 
         List<Tuple> results = queryFactory
-                .select(scrap.scrapId, scrap.title, scrap.updatedAt)
+                .selectDistinct(scrap.scrapId, scrap.title, scrap.updatedAt)
                 .from(scrap)
                 .join(user).on(scrap.user.eq(requestUser))
                 .where(builder)
