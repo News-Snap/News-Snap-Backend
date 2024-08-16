@@ -3,13 +3,11 @@ package com.example.news_snap.domain.news.service;
 import com.example.news_snap.domain.news.dto.NewsApiResponseDto;
 import com.example.news_snap.domain.news.dto.NewsResponseDto;
 import com.example.news_snap.domain.news.dto.NewsSearchOptions;
+import com.example.news_snap.domain.news.dto.PopularStockResponseDto;
+import com.example.news_snap.domain.news.repository.CrawlingRepository;
 import com.example.news_snap.domain.news.repository.NewsApiResponseRepository;
 import com.example.news_snap.global.common.code.status.ErrorStatus;
 import com.example.news_snap.global.common.exception.handler.NewsHandler;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -18,14 +16,8 @@ import org.jsoup.select.Elements;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -35,6 +27,7 @@ public class NewsService {
     private final String HEADLINE_CLASS = ".sa_item._SECTION_HEADLINE";
 
     private final NewsApiResponseRepository newsApiResponseRepository;
+    private final CrawlingRepository crawlingRepository;
 
     public List<NewsResponseDto> getHeadLineNews() {
 
@@ -79,4 +72,9 @@ public class NewsService {
         return newsApiResponseDto.getNewsResponseDto();
     }
 
+    public PopularStockResponseDto getPopularStocks() {
+        PopularStockResponseDto popularStockResponseDto = crawlingRepository.getPopularStockResponseDto();
+
+        return popularStockResponseDto.sortByRank();
+    }
 }
