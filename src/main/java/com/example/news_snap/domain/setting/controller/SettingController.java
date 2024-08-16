@@ -46,10 +46,5 @@ public class SettingController {
         return ApiResponse.onSuccess(settingService.updateAlarmTime(userId, request));
     }
 
-    // 개선사항 추가
-    @PostMapping("/improvement")
-    public ApiResponse<SettingResponse.addImprovementResultDTO> addImprovement(@PathVariable Long userId, @RequestBody SettingRequest.addImprovementDTO request){
-        return ApiResponse.onSuccess(settingService.);
-    }
 
 }
