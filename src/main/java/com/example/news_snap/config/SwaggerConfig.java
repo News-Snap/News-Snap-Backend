@@ -34,9 +34,6 @@ public class SwaggerConfig {
                 .license(license);
     }
 
-    private Components getComponents() {
-        return new Components();
-    }
     private Components authSetting() {
         return new Components()
                 .addSecuritySchemes(
