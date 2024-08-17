@@ -18,6 +18,7 @@ public record NewsApiResponseDto(
 
     // 네이버 뉴스 링크로 접속하여 최종적으로 반환해줄 Dto 필드 크롤링하여 할당
     public List<NewsResponseDto> getNewsResponseDto() {
+
         return getOnlyNaverNews().stream()
                 .map(item -> item.toNewsResponseDto(new JsoupCrawling()))
                 .collect(Collectors.toList());

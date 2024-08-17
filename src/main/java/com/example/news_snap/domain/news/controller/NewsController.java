@@ -34,4 +34,10 @@ public class NewsController {
     ) {
         return ApiResponse.onSuccess(newsService.searchNews(searchOptions));
     }
+
+    @Operation(summary = "인기 검색어 조회", description = "네이버 증권의 인기 검색 키워드 top5를 조회합니다.")
+    @GetMapping("/popular-keywords")
+    public ApiResponse<?> getPopularKeywords() {
+        return ApiResponse.onSuccess(newsService.getPopularStocks());
+    }
 }
