@@ -6,6 +6,8 @@ import com.example.news_snap.domain.myWord.dto.MyWordRequest;
 import com.example.news_snap.domain.myWord.dto.MyWordResponse;
 import com.example.news_snap.domain.myWord.entity.MyWord;
 import com.example.news_snap.domain.myWord.repository.MyWordRepository;
+import com.example.news_snap.global.common.code.status.ErrorStatus;
+import com.example.news_snap.global.common.exception.handler.UserHandler;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -34,7 +36,7 @@ public class MyWordService {
                 .word(request.word())
                 .build();
 
-        User user = userRepository.findById(userId).orElseThrow();  //예외처리
+        User user = userRepository.findById(userId).orElse(null);
         myWord.setUser(user);
         myWordRepository.save(myWord);
 
