@@ -55,5 +55,11 @@ public class UserService {
             }
             return null;
         }
-   }
+
+    public String deleteUser(String email) {
+        User user = userRepository.findByEmail(email);
+        userRepository.delete(user);
+        return "삭제되었습니다.";
+    }
+}
 
