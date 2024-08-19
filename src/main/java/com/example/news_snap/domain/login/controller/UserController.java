@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -63,5 +64,13 @@ public class UserController {
         } else {
             return ApiResponse.onFailure("로그인 실패");
         }
+    }
+
+    @Operation(summary = "해당 이메일 유저 삭제", description = "해당 이메일 유저를 삭제합니다.")
+    @DeleteMapping("/delete/{email}")
+    public ApiResponse<String> deleteUser(
+            @PathVariable(name = "email") String email
+    ) {
+        return ApiResponse.onSuccess(userService.deleteUser(email));
     }
 }
