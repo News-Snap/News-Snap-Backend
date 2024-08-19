@@ -27,12 +27,5 @@ public record SettingRequest() {
             LocalTime alarmTime
     ){}
 
-    public record addImprovementDTO(
-            String improvement
-    ){}
-
-
-
-
 
 }

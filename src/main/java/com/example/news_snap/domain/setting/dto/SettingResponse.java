@@ -35,9 +35,4 @@ public record SettingResponse() {
             LocalTime alarmTime
     ){}
 
-
-    @Builder
-    public record addImprovementResultDTO(
-            String improvement
-    ){}
 }
