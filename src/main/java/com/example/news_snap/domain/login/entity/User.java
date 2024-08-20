@@ -76,9 +76,9 @@ public class User extends BaseEntity {
         return this.nickname;
     }
 
-    public AlarmDay updateAlarmDay(AlarmDay newAlarmDay){
-        this.alarmDay = newAlarmDay;
-        return this.alarmDay;
+    public String updateAlarmDay(String newAlarmDay){
+        this.alarmDay = AlarmDay.valueOf(newAlarmDay);
+        return this.alarmDay.name();
     }
 
     public LocalTime updateAlarmTime(LocalTime newAlarmTime){

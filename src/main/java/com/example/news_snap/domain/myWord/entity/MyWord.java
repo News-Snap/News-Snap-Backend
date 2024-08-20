@@ -22,7 +22,7 @@ public class MyWord {
     private User user;
 
 
-    public void setUser(User user) {
+    public void initializeUser(User user) {
         this.user = user;
         user.getMyWordList().add(this);
     }

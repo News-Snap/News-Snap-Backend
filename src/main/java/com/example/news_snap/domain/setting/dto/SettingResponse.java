@@ -11,7 +11,7 @@ public record SettingResponse() {
     public record settingDTO(
             String nickname,
             boolean pushAlarm,
-            AlarmDay alarmDay,
+            String alarmDay,
             LocalTime alarmTime
     ){}
 
@@ -27,7 +27,7 @@ public record SettingResponse() {
 
     @Builder
     public record updateAlarmDayResultDTO(
-            AlarmDay alarmDay
+            String alarmDay
     ){}
 
     @Builder

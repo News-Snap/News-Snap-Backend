@@ -24,7 +24,7 @@ public class SettingService {
                 .nickname(user.getNickname())
                 .alarmTime(user.getAlarmTime())
                 .pushAlarm(user.getPushAlarm())
-                .alarmDay(user.getAlarmDay())
+                .alarmDay(user.getAlarmDay().name())
                 .build();
     }
 

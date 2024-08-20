@@ -19,7 +19,7 @@ public record SettingRequest() {
     ){}
 
     public record updateAlarmDayDTO(
-            AlarmDay alarmDay
+            String alarmDay
     ){}
 
 

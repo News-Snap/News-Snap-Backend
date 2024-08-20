@@ -25,7 +25,7 @@ public class MyWordService {
 
 
     public List<MyWordResponse.MyWordDTO> getMyWordList(Long userId) {
-        User user = userRepository.findById(userId).orElse(null);
+        User user = userRepository.findById(userId).orElseThrow(()-> new UserHandler(ErrorStatus._NOT_FOUND_USER));
         List<MyWord> myWordList = user.getMyWordList();
         return myWordList.stream()
                 .map(a -> new MyWordResponse.MyWordDTO(a.getWord())).collect(Collectors.toList());
@@ -36,8 +36,8 @@ public class MyWordService {
                 .word(request.word())
                 .build();
 
-        User user = userRepository.findById(userId).orElse(null);
-        myWord.setUser(user);
+        User user = userRepository.findById(userId).orElseThrow(()-> new UserHandler(ErrorStatus._NOT_FOUND_USER));
+        myWord.initializeUser(user);
         myWordRepository.save(myWord);
 
         return MyWordResponse.addResultDTO.builder()
