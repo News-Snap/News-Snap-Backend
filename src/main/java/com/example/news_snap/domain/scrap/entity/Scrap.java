@@ -2,6 +2,7 @@ package com.example.news_snap.domain.scrap.entity;
 
 import com.example.news_snap.domain.login.entity.User;
 import com.example.news_snap.domain.scrap.dto.ScrapRequest;
+import com.example.news_snap.domain.scrap.entity.enums.FinancialTerms;
 import com.example.news_snap.global.common.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -55,5 +56,15 @@ public class Scrap extends BaseEntity {
 
     public void uploadFile(String url) {
         this.fileUrl = url;
+    }
+
+    public List<FinancialTerms> getTermList() {
+        List<FinancialTerms> financialTermsList = new ArrayList<>();
+
+        for (Keyword keyword : keywordList) {
+            financialTermsList.add(keyword.getTerm());
+        }
+
+        return financialTermsList;
     }
 }
