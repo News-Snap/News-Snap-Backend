@@ -5,11 +5,11 @@ import com.example.news_snap.domain.scrap.converter.ScrapConverter;
 import com.example.news_snap.domain.scrap.dto.ScrapRequest;
 import com.example.news_snap.domain.scrap.dto.ScrapResponse;
 import com.example.news_snap.domain.scrap.entity.Keyword;
-import com.example.news_snap.domain.scrap.entity.RelatedUrl;
+import com.example.news_snap.domain.scrap.entity.RelatedScrap;
 import com.example.news_snap.domain.scrap.entity.Scrap;
 import com.example.news_snap.domain.scrap.entity.enums.FinancialTerms;
 import com.example.news_snap.domain.scrap.repository.KeywordRepository;
-import com.example.news_snap.domain.scrap.repository.RelatedUrlRepository;
+import com.example.news_snap.domain.scrap.repository.RelatedScrapRepository;
 import com.example.news_snap.domain.scrap.repository.ScrapRepository;
 import com.example.news_snap.global.common.code.status.ErrorStatus;
 import com.example.news_snap.global.common.exception.handler.ScrapHandler;
@@ -32,7 +32,7 @@ public class ScrapService {
 
     private final ScrapRepository scrapRepository;
     private final KeywordRepository keywordRepository;
-    private final RelatedUrlRepository relatedUrlRepository;
+    private final RelatedScrapRepository relatedScrapRepository;
     private final UuidRepository uuidRepository;
     private final S3Manager s3Manager;
 
@@ -46,8 +46,8 @@ public class ScrapService {
 
         List<FinancialTerms> terms = scrap.getKeywordList().stream()
                 .map(Keyword::getTerm).toList();
-        List<String> relatedUrlStringList = scrap.getRelatedUrlList().stream()
-                .map(RelatedUrl::getRelatedUrl).toList();
+        List<String> relatedUrlStringList = scrap.getFollowerRelatedScrapList().stream()
+                .map(RelatedScrap::getRelatedUrl).toList();
 
         return ScrapResponse.DetailDto.builder()
                 .title(scrap.getTitle())
@@ -71,8 +71,8 @@ public class ScrapService {
                 .build());
 
         for (String url : request.relatedUrlList()) {
-            RelatedUrl relatedUrl = ScrapConverter.toRelatedUrl(url, savedScrap);
-            relatedUrlRepository.save(relatedUrl);
+            RelatedScrap relatedScrap = ScrapConverter.toRelatedScrap(url, savedScrap);
+            relatedScrapRepository.save(relatedScrap);
         }
 
         for (FinancialTerms term : request.keywords()) {

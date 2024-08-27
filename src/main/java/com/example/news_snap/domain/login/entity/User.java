@@ -70,5 +70,24 @@ public class User extends BaseEntity {
                 ", alarmDay=" + alarmDay +
                 '}';
     }
+
+    public String updateNickname(String newNickname){
+        this.nickname = newNickname;
+        return this.nickname;
+    }
+
+    public String updateAlarmDay(String newAlarmDay){
+        this.alarmDay = AlarmDay.valueOf(newAlarmDay);
+        return this.alarmDay.name();
+    }
+
+    public LocalTime updateAlarmTime(LocalTime newAlarmTime){
+        this.alarmTime = newAlarmTime;
+        return this.alarmTime;
+    }
+    public boolean updatePushAlarm(Boolean newPushAlarm){
+        this.pushAlarm = newPushAlarm;
+        return this.pushAlarm;
+    }
 }
 

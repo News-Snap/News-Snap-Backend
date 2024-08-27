@@ -11,15 +11,19 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class RelatedUrl {
+public class RelatedScrap {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long relatedUrlId;
+    private Long relatedScrapId;
 
     private String relatedUrl;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "scrap_id")
-    private Scrap scrap;
+    @JoinColumn(name = "following_scrap_id")
+    private Scrap followingScrap;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "follower_scrap_id")
+    private Scrap followerScrap;
 }
