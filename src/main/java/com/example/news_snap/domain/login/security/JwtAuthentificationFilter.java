@@ -1,5 +1,6 @@
 package com.example.news_snap.domain.login.security;
 
+import com.example.news_snap.domain.login.entity.AuthProvider;
 import com.example.news_snap.domain.login.entity.User;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -18,6 +20,8 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Component
@@ -43,16 +47,33 @@ public class JwtAuthentificationFilter extends OncePerRequestFilter {
                 // 사용자 정보를 가져온다.
                 //CustomUserDetails userDetails = tokenProvider.getUserDetails(userId);
                 User user = tokenProvider.getUser(email);
-                user.setAuthProvider(tokenProvider.getIssuerFromToken(token));
-                log.info("Token issuer:" + user.getAuthProvider());
+                String issuer = tokenProvider.getIssuerFromToken(token);
+
+                // 사용자 권한 가져오기
+                List<SimpleGrantedAuthority> authorities = user.getRoles().stream()
+                        .map(role -> new SimpleGrantedAuthority(role.name())) // Authority 객체를 문자열로 변환
+                        .collect(Collectors.toList());
+
+                try {
+                    // 발급자를 AuthProvider Enum으로 변환
+                    AuthProvider authProvider = AuthProvider.valueOf(issuer.toUpperCase());
+
+                    // user 객체에 발급자를 설정
+                    user.setAuthProvider(authProvider);
+
+                    // 로그 출력
+                    log.info("Token issuer: " + user.getAuthProvider());
+                } catch (IllegalArgumentException e) {
+                    log.error("Invalid auth provider: " + issuer, e);
+                }
+
 
                 // 인증 완료, SecurityContextHolder에 등록해야 인증된 사용자로 인식된다.
                 AbstractAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                        //추후에 소셜로그인 추가시 userDetails로 변경도 고려
-                        //userDetails,
+
                         user,
                         null,
-                        AuthorityUtils.NO_AUTHORITIES //나중에 수정
+                        authorities
                 );
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContext securityContext = SecurityContextHolder.createEmptyContext();

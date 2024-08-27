@@ -1,22 +1,27 @@
 package com.example.news_snap.domain.login.config;
 
+import com.example.news_snap.domain.login.security.oauth.CustomOAuth2UserService;
 import com.example.news_snap.domain.login.security.JwtAuthentificationFilter;
-import com.example.news_snap.domain.login.security.OAuthUserService;
+import com.example.news_snap.domain.login.security.oauth.OAuthSuccessHandler;
+
+import com.example.news_snap.domain.login.security.oauth.RedirectUrlCookieFilter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 //http://localhost:8080/oauth2/authorization/naver
+//http://localhost:8080/oauth2/authorization/google
+//http://localhost:8080/oauth2/authorization/kakao
 @RequiredArgsConstructor
 @Configuration
 @EnableWebSecurity
@@ -24,9 +29,13 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class WebSecurityConfig {
 
     @Autowired
-    JwtAuthentificationFilter jwtAuthentificationFilter;
+    private JwtAuthentificationFilter jwtAuthentificationFilter;
     @Autowired
-    OAuthUserService oAuthUserService;
+    private CustomOAuth2UserService customOAuth2UserService;
+    @Autowired
+    private OAuthSuccessHandler oAuthSuccessHandler;
+    @Autowired
+    private RedirectUrlCookieFilter redirectUrlCookieFilter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtAuthentificationFilter jwtAuthentificationFilter) throws Exception {
@@ -55,44 +64,27 @@ public class WebSecurityConfig {
                         .baseUri("/api/v1/oauth2/callback/*") // OAuth2 인증 후 리디렉션 받을 엔드포인트
                 )
                 .userInfoEndpoint(userInfo -> userInfo
-                        .userService(oAuthUserService) // 사용자 정보 서비스 설정
+                        .userService(customOAuth2UserService) // 사용자 정보 서비스 설정
+
                 )
+                .successHandler(oAuthSuccessHandler)
+
         );
 
         // JWT 인증 필터 추가
         http.addFilterAfter(jwtAuthentificationFilter, UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(redirectUrlCookieFilter, OAuth2AuthorizationRequestRedirectFilter.class);
+
+        // 예외 처리 설정 추가
+        http.exceptionHandling(exceptionHandling -> exceptionHandling
+                .authenticationEntryPoint(new Http403ForbiddenEntryPoint()) // 인증 실패 핸들러 설정
+
+        );
+
+
+
 
         return http.build();
     }
 }
 
-
-/*
-@RequiredArgsConstructor
-@Configuration
-@EnableWebSecurity
-@Slf4j
-public class WebSecurityConfig {
-
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtAuthentificationFilter jwtAuthentificationFilter) throws Exception {
-
-        http.csrf(AbstractHttpConfigurer::disable)          //csrf 보호 비능 비활성화
-                .httpBasic(AbstractHttpConfigurer::disable)
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                //현재 모든 path에 대해 인증없이 허용
-                .authorizeHttpRequests(auth -> auth.requestMatchers("/**","/api/v1/auth/**").permitAll()).and().oauth2Login();
-        /*
-                //추후 변경 예정
-                .authorizeHttpRequests(auth -> auth.requestMatchers("/", "/api/v1/auth/**"
-                ).permitAll().anyRequest().authenticated());
-
-
-        http.addFilterAfter(jwtAuthentificationFilter, UsernamePasswordAuthenticationFilter.class);
-
-        return http.build();
-    }
-
-}
-
- */
