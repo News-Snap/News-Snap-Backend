@@ -21,8 +21,9 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
     private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-    //@Autowired
-    //private JavaMailSender mailSender;
+
+    @Autowired
+    private JavaMailSender mailSender;
 
 
     public User createUser(SignupUserDTO userDTO) {
@@ -70,7 +71,7 @@ public class UserService {
             }
             return null;
         }
-        /*
+
     private final Map<String, String> verificationCodes = new HashMap<>();
 
     public void sendVerificationCode(String email) {
@@ -111,7 +112,7 @@ public class UserService {
     private String generateVerificationCode() {
         return String.format("%06d", new Random().nextInt(999999));
     }
-*/
+
 
     public String deleteUser(String email) {
         User user = userRepository.findByEmail(email);
