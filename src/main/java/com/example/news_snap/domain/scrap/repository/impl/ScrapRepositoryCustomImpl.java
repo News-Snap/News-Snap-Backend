@@ -49,6 +49,7 @@ public class ScrapRepositoryCustomImpl implements ScrapRepositoryCustom {
                 .from(scrap)
                 .join(user).on(scrap.user.eq(requestUser))
                 .where(builder)
+                .orderBy(scrap.updatedAt.desc())
                 .fetch();
 
         return results.stream()
