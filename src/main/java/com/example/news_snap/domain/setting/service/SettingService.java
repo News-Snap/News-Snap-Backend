@@ -1,6 +1,7 @@
 package com.example.news_snap.domain.setting.service;
 
 
+import com.example.news_snap.domain.login.entity.AlarmDay;
 import com.example.news_snap.domain.login.entity.User;
 import com.example.news_snap.domain.login.repository.UserRepository;
 import com.example.news_snap.domain.setting.dto.SettingRequest;
@@ -10,6 +11,9 @@ import com.example.news_snap.global.common.exception.handler.UserHandler;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -24,7 +28,9 @@ public class SettingService {
                 .nickname(user.getNickname())
                 .alarmTime(user.getAlarmTime())
                 .pushAlarm(user.getPushAlarm())
-                .alarmDay(user.getAlarmDay().name())
+                .alarmDay(user.getAlarmDay().stream()
+                        .map(AlarmDay::name) // Enum을 String으로 변환
+                        .collect(Collectors.toList())) // 리스트로 수집
                 .build();
     }
 
@@ -34,13 +40,23 @@ public class SettingService {
                         .nickname(user.updateNickname(request.nickname()))
                 .build();
     }
-
-    public SettingResponse.updateAlarmDayResultDTO updateAlarmDay(Long userId, SettingRequest.updateAlarmDayDTO request){
+    public SettingResponse.updateAlarmDayResultDTO updateAlarmDay(Long userId, SettingRequest.updateAlarmDayDTO request) {
         User user = userRepository.findById(userId).orElseThrow(() -> new UserHandler(ErrorStatus._NOT_FOUND_USER));
+
+        // 문자열 리스트를 AlarmDay enum 리스트로 변환
+        List<AlarmDay> alarmDays = request.alarmDay().stream()
+                .map(AlarmDay::valueOf) // 문자열을 AlarmDay enum으로 변환
+                .collect(Collectors.toList()); // 리스트로 수집
+
+        List<AlarmDay> updatedAlarmDays = user.updateAlarmDay(alarmDays);
+
         return SettingResponse.updateAlarmDayResultDTO.builder()
-                .alarmDay(user.updateAlarmDay(request.alarmDay()))
+                .alarmDay(updatedAlarmDays.stream()
+                        .map(Enum::name) // enum을 문자열로 변환
+                        .collect(Collectors.toList())) // 리스트로 수집
                 .build();
     }
+
 
     public SettingResponse.updatePushAlarmResultDTO updatePushAlarm(Long userId, SettingRequest.updatePushAlarmDTO request){
         User user = userRepository.findById(userId).orElseThrow(() -> new UserHandler(ErrorStatus._NOT_FOUND_USER));

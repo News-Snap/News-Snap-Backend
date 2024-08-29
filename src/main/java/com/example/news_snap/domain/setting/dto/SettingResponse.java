@@ -4,6 +4,7 @@ import com.example.news_snap.domain.login.entity.AlarmDay;
 import lombok.Builder;
 
 import java.time.LocalTime;
+import java.util.List;
 
 public record SettingResponse() {
 
@@ -11,7 +12,7 @@ public record SettingResponse() {
     public record settingDTO(
             String nickname,
             boolean pushAlarm,
-            String alarmDay,
+            List<String> alarmDay,
             LocalTime alarmTime
     ){}
 
@@ -27,7 +28,7 @@ public record SettingResponse() {
 
     @Builder
     public record updateAlarmDayResultDTO(
-            String alarmDay
+            List<String> alarmDay
     ){}
 
     @Builder

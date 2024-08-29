@@ -1,6 +1,8 @@
 package com.example.news_snap.domain.login.service;
 
 import com.example.news_snap.domain.login.dto.SignupUserDTO;
+import com.example.news_snap.domain.login.entity.AuthProvider;
+import com.example.news_snap.domain.login.entity.Authority;
 import com.example.news_snap.domain.login.entity.Status;
 import com.example.news_snap.domain.login.entity.User;
 import com.example.news_snap.domain.login.repository.UserRepository;
@@ -9,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Collections;
 
 @Slf4j
 @Service
@@ -26,12 +30,12 @@ public class UserService {
                     .email(userDTO.email())
                     .password(passwordEncoder.encode(userDTO.password()))
                     .nickname(userDTO.nickname())
-                    .role("ROLE_USER")
+                    .roles(Collections.singletonList(Authority.ROLE_USER))
                     .alarmTime(userDTO.alarmTime())
-                    .birthDate(userDTO.birthDate())
-                    .alarmDay(userDTO.alarmDay())
+                    .alarmDay(Collections.singletonList(userDTO.alarmDay()))
                     .pushAlarm(userDTO.pushAlarm())
                     .status(Status.ACTIVE)
+                    .authProvider(AuthProvider.NEWSSNAP)
                     .build();
 
             if (user == null || user.getEmail() == null) {

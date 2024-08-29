@@ -4,12 +4,14 @@ import com.example.news_snap.domain.myWord.entity.MyWord;
 import com.example.news_snap.domain.scrap.entity.Scrap;
 import com.example.news_snap.global.common.BaseEntity;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @AllArgsConstructor
@@ -25,16 +27,21 @@ public class User extends BaseEntity {
 
     private String password;
 
-    private String role;            //사용자 role (ex 어드민, 일반사용자 등)
+    @Column(name = "roles")
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Builder.Default
+    private List<Authority> roles = new ArrayList<>();            //사용자 role (ex 어드민, 일반사용자 등)
 
-    private String authProvider;    //OAuth 유저 정보 제공자
+    @Column(name= "auth_provider", length = 20)
+    @Enumerated(EnumType.STRING)
+    @NotNull
+    private AuthProvider authProvider;    //OAuth 유저 정보 제공자
 
     @Column(nullable = false)
     private String email;
 
     private LocalTime alarmTime;
 
-    private LocalDate birthDate;
 
     private Boolean pushAlarm;
 
@@ -43,8 +50,11 @@ public class User extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Status status;
 
+    @ElementCollection(targetClass = AlarmDay.class, fetch = FetchType.EAGER)
+    @CollectionTable(name = "user_alarm_days", joinColumns = @JoinColumn(name = "user_id"))
     @Enumerated(EnumType.STRING)
-    private AlarmDay alarmDay;            //알람 요일
+    @Column(name = "alarm_day", nullable = false)
+    private List<AlarmDay> alarmDay = new ArrayList<>();         //알람 요일
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Scrap> scrapList = new ArrayList<>();
@@ -59,11 +69,10 @@ public class User extends BaseEntity {
                 "userId=" + userId +
                 ", nickname='" + nickname + '\'' +
                 ", password='" + password + '\'' +
-                ", role='" + role + '\'' +
+                ", roles='" + roles + '\'' +
                 ", authProvider='" + authProvider + '\'' +
                 ", email='" + email + '\'' +
                 ", alarmTime=" + alarmTime +
-                ", birthDate=" + birthDate +
                 ", pushAlarm=" + pushAlarm +
                 ", inactivatedAt=" + inactivatedAt +
                 ", status=" + status +
@@ -76,10 +85,15 @@ public class User extends BaseEntity {
         return this.nickname;
     }
 
-    public String updateAlarmDay(String newAlarmDay){
-        this.alarmDay = AlarmDay.valueOf(newAlarmDay);
-        return this.alarmDay.name();
+
+    public List<AlarmDay> updateAlarmDay(List<AlarmDay> newAlarmDays) {
+        // 문자열 리스트를 AlarmDay enum 리스트로 변환
+        this.alarmDay = newAlarmDays; // 리스트로 수집
+
+        return this.alarmDay; // 업데이트된 AlarmDay 리스트를 반환
     }
+
+
 
     public LocalTime updateAlarmTime(LocalTime newAlarmTime){
         this.alarmTime = newAlarmTime;
