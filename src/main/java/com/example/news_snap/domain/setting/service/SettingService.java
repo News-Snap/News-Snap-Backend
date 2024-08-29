@@ -22,8 +22,7 @@ public class SettingService {
 
     private final UserRepository userRepository;
 
-    public SettingResponse.settingDTO getSetting(Long userId){
-        User user = userRepository.findById(userId).orElseThrow(() -> new UserHandler(ErrorStatus._NOT_FOUND_USER));
+    public SettingResponse.settingDTO getSetting(User user) {
         return SettingResponse.settingDTO.builder()
                 .nickname(user.getNickname())
                 .alarmTime(user.getAlarmTime())
@@ -34,15 +33,13 @@ public class SettingService {
                 .build();
     }
 
-    public SettingResponse.updateNicknameResultDTO updateNickname(Long userId, SettingRequest.updateNicknameDTO request){
-        User user = userRepository.findById(userId).orElseThrow(() -> new UserHandler(ErrorStatus._NOT_FOUND_USER));
+    public SettingResponse.updateNicknameResultDTO updateNickname(User user, SettingRequest.updateNicknameDTO request) {
         return SettingResponse.updateNicknameResultDTO.builder()
-                        .nickname(user.updateNickname(request.nickname()))
+                .nickname(user.updateNickname(request.nickname()))
                 .build();
     }
-    public SettingResponse.updateAlarmDayResultDTO updateAlarmDay(Long userId, SettingRequest.updateAlarmDayDTO request) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new UserHandler(ErrorStatus._NOT_FOUND_USER));
 
+    public SettingResponse.updateAlarmDayResultDTO updateAlarmDay(User user, SettingRequest.updateAlarmDayDTO request) {
         // 문자열 리스트를 AlarmDay enum 리스트로 변환
         List<AlarmDay> alarmDays = request.alarmDay().stream()
                 .map(AlarmDay::valueOf) // 문자열을 AlarmDay enum으로 변환
@@ -58,21 +55,15 @@ public class SettingService {
     }
 
 
-    public SettingResponse.updatePushAlarmResultDTO updatePushAlarm(Long userId, SettingRequest.updatePushAlarmDTO request){
-        User user = userRepository.findById(userId).orElseThrow(() -> new UserHandler(ErrorStatus._NOT_FOUND_USER));
+    public SettingResponse.updatePushAlarmResultDTO updatePushAlarm(User user, SettingRequest.updatePushAlarmDTO request) {
         return SettingResponse.updatePushAlarmResultDTO.builder()
                 .pushAlarm(user.updatePushAlarm(request.pushAlarm()))
                 .build();
     }
 
-    public SettingResponse.updateAlarmTimeResultDTO updateAlarmTime(Long userId, SettingRequest.updateAlarmTimeDTO request){
-        User user = userRepository.findById(userId).orElseThrow(() -> new UserHandler(ErrorStatus._NOT_FOUND_USER));
+    public SettingResponse.updateAlarmTimeResultDTO updateAlarmTime(User user, SettingRequest.updateAlarmTimeDTO request) {
         return SettingResponse.updateAlarmTimeResultDTO.builder()
                 .alarmTime(user.updateAlarmTime(request.alarmTime()))
                 .build();
     }
-
-
-
-
 }
