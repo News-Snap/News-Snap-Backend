@@ -11,9 +11,7 @@ public record SignupUserDTO(
          String email,
          String nickname,
          String password,
-         LocalTime alarmTime,
          LocalDate birthDate,
-         AlarmDay alarmDay,
          Boolean pushAlarm
 ) {
 
