@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -44,11 +45,6 @@ public class UserController {
     }
 
     @Operation(summary = "로그인", description = "게스트 계정 로그인")
-    /*
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "로그인 성공"),
-            @ApiResponse(responseCode = "400", description = "로그인 실패")
-    })*/
     @PostMapping("/login")
     public ApiResponse<String> authenticateUser(@RequestBody LoginRequestDTO loginRequestDTO) {
         User user = userService.getByCredentials(
@@ -63,5 +59,13 @@ public class UserController {
         } else {
             return ApiResponse.onFailure("로그인 실패");
         }
+    }
+
+    @Operation(summary = "해당 이메일 유저 삭제", description = "해당 이메일 유저를 삭제합니다.")
+    @DeleteMapping("/delete/{email}")
+    public ApiResponse<String> deleteUser(
+            @PathVariable(name = "email") String email
+    ) {
+        return ApiResponse.onSuccess(userService.deleteUser(email));
     }
 }

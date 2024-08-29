@@ -2,17 +2,21 @@ package com.example.news_snap.domain.login.security;
 
 import com.example.news_snap.domain.login.entity.User;
 import com.example.news_snap.domain.login.repository.UserRepository;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.SignatureException;
+import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
+import java.util.stream.Collectors;
 
 
 @Slf4j
@@ -32,6 +36,7 @@ public class TokenProvider {
 
     */
     private static final String SECRET_KEY = "secret";
+    private static final String AUTHORITIES_KEY = "auth";
 
     public String createToken(User user) {
         //기한 지금으로부터 1일
@@ -44,7 +49,28 @@ public class TokenProvider {
         return Jwts.builder()
                 .signWith(SignatureAlgorithm.HS512, SECRET_KEY)
                 .setSubject(user.getEmail())
-                .setIssuer("news snap app")
+                .setIssuer("NEWSSNAP")
+                .setIssuedAt(new Date())
+                .setExpiration(expiryDate)
+                .compact();
+    }
+    public String createSocialToken(final Authentication authentication) {
+        log.info("createSocialToken" + authentication);
+        String authorities = authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.joining(","));
+        //기한 지금으로부터 1일
+        Date expiryDate = Date.from(
+                Instant.now()
+                        .plus(1, ChronoUnit.DAYS)
+        );;
+
+        //JWT Token 생성
+        return Jwts.builder()
+                .signWith(SignatureAlgorithm.HS512, SECRET_KEY)
+                .setSubject(authentication.getName())
+                .claim(AUTHORITIES_KEY,authorities)
+                .setIssuer("NEWSSNAP")
                 .setIssuedAt(new Date())
                 .setExpiration(expiryDate)
                 .compact();
@@ -86,5 +112,7 @@ public class TokenProvider {
         //추후 서비스 수정
         return (User) userRepository.findByEmail(email);
     }
+
+
 
 }

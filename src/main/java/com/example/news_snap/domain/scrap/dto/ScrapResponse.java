@@ -42,5 +42,6 @@ public record ScrapResponse() {
     @Builder
     public record KeywordDto (
             String keyword
-    ) {}
+    ) {
+    }
 }

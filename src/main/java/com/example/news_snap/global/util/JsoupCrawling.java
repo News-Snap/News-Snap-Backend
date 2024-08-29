@@ -3,10 +3,12 @@ package com.example.news_snap.global.util;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.select.Elements;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.Optional;
 
+@Component
 public class JsoupCrawling {
 
     public Connection getConnection(String url) {

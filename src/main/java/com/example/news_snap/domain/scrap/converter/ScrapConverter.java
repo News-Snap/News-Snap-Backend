@@ -1,11 +1,9 @@
 package com.example.news_snap.domain.scrap.converter;
 
 import com.example.news_snap.domain.scrap.entity.Keyword;
-import com.example.news_snap.domain.scrap.entity.RelatedUrl;
+import com.example.news_snap.domain.scrap.entity.RelatedScrap;
 import com.example.news_snap.domain.scrap.entity.Scrap;
 import com.example.news_snap.domain.scrap.entity.enums.FinancialTerms;
-
-import java.util.List;
 
 public class ScrapConverter {
 
@@ -16,10 +14,9 @@ public class ScrapConverter {
                 .build();
     }
 
-    public static RelatedUrl toRelatedUrl(String url, Scrap savedScrap) {
-        return RelatedUrl.builder()
+    public static RelatedScrap toRelatedScrap(String url, Scrap savedScrap) {
+        return RelatedScrap.builder()
                 .relatedUrl(url)
-                .scrap(savedScrap)
                 .build();
     }
 }
