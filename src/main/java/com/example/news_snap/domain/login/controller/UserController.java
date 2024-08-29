@@ -13,7 +13,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -62,7 +61,7 @@ public class UserController {
             return ApiResponse.onFailure("로그인 실패");
         }
     }
-/*
+
     @Operation(summary = "비밀번호 재설정 이메일 발송", description = "이메일로 인증 코드를 전송합니다.")
     @PostMapping("/password-reset/email")
     public ApiResponse<?> sendVerificationCode(@RequestBody PasswordResetEmailDTO request) {
@@ -70,8 +69,6 @@ public class UserController {
             userService.sendVerificationCode(request.email());
             return ApiResponse.onSuccess("인증 코드가 이메일로 전송되었습니다.");
         } catch (Exception e) {
-            // 발생하는 예외 종류를 확인하기 위해 로그 추가
-            log.error("Error occurred while sending verification code: {}", e.getMessage());
             return ApiResponse.onFailure(e.getMessage());
         }
     }
@@ -86,7 +83,7 @@ public class UserController {
         }
     }
 
- */
+
     @Operation(summary = "해당 이메일 유저 삭제", description = "해당 이메일 유저를 삭제합니다.")
     @DeleteMapping("/delete/{email}")
     public ApiResponse<String> deleteUser(
