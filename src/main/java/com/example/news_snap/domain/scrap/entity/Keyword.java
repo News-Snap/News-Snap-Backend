@@ -18,6 +18,8 @@ public class Keyword {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long keywordId;
 
+    @Enumerated(EnumType.STRING)
+    @Column(length = 255)
     private FinancialTerms term;
 
     @ManyToOne(fetch = FetchType.LAZY)
